@@ -11,7 +11,7 @@
 </div>
 
 ###
-![UI Screenshot](blob:https://web.telegram.org/dab4b9e2-1386-48ec-a622-093ab094fd93)
+![UI Screenshot](assets/ui.png)
 ## Funzionalità
 
 - Holehe  
