@@ -66,7 +66,7 @@ class RoundedFrame(tk.Frame):
         self.fill_color = new_color
         self._draw_border()
 
-# --- MODIFICA #1: NUOVA LOGICA PER SPLASH SCREEN NON BLOCCANTE ---
+# --- MODIFICA #1: NUOVA LOGICA PER SPLASH SCREEN NON BLOCCANTE E COMPATIBILE CON LINUX ---
 def create_splash_screen(parent):
     splash_win = tk.Toplevel(parent)
     splash_win.overrideredirect(True)
@@ -76,9 +76,21 @@ def create_splash_screen(parent):
     x, y = (screen_width / 2) - (splash_width / 2), (screen_height / 2) - (splash_height / 2)
     splash_win.geometry(f'{splash_width}x{splash_height}+{int(x)}+{int(y)}')
 
-    TRANSPARENT_COLOR = '#abcdef' 
-    splash_win.config(bg=TRANSPARENT_COLOR)
-    splash_win.attributes('-transparentcolor', TRANSPARENT_COLOR)
+    # --- INIZIO DELLA MODIFICA PER LA COMPATIBILITÀ ---
+    # Controlla il sistema operativo per applicare l'effetto di trasparenza corretto
+    if sys.platform == "win32":
+        # Metodo per Windows per creare una finestra sagomata (non rettangolare)
+        TRANSPARENT_COLOR = '#abcdef' 
+        splash_win.config(bg=TRANSPARENT_COLOR)
+        splash_win.attributes('-transparentcolor', TRANSPARENT_COLOR)
+    else:
+        # Metodo per Linux e altri OS che usa -alpha come richiesto.
+        # Questo crea una finestra rettangolare semi-trasparente.
+        # Impostiamo il colore di sfondo della finestra uguale a quello del frame
+        # per evitare che gli angoli appaiano di un colore indesiderato.
+        splash_win.config(bg=SIDEBAR_BG)
+        splash_win.attributes('-alpha', 0.95) # Valore da 0.0 (trasparente) a 1.0 (opaco)
+    # --- FINE DELLA MODIFICA ---
 
     splash_frame = RoundedFrame(splash_win, radius=25, fill_color=SIDEBAR_BG, border_width=0)
     splash_frame.pack(fill='both', expand=True)
@@ -95,6 +107,7 @@ def create_splash_screen(parent):
     
     return splash_win
 # --- FINE MODIFICA #1 ---
+
 
 # Config file
 CONFIG_FILE = 'config.json'
@@ -294,4 +307,3 @@ if __name__ == "__main__":
     root.after(100, setup_main_app, root, splash)
     
     root.mainloop()
-# --- FINE MODIFICA #2 ---
