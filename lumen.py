@@ -11,9 +11,7 @@ import sys
 from datetime import datetime
 from PIL import Image, ImageTk
 
-# --- INIZIO SEZIONE UI ---
-
-# PALETTE COLORI DA SKETCH BOZZA
+# PALETTE COLORI 
 SIDEBAR_BG = "#000000"
 DIVIDER_COLOR = "#292929"
 TAB_SELECTED_BG = "#292929"
@@ -31,7 +29,7 @@ FONT_NORMAL = (FONT_FAMILY, 10)
 FONT_BOLD = (FONT_FAMILY, 10, "bold")
 ICON_FONT = (FONT_FAMILY, 22)
 
-# CLASSE PER I WIDGET CON ANGOLI ARROTONDATI (CON LOGICA DI DISEGNO DEFINITIVA)
+# CLASSE PER I WIDGET 
 class RoundedFrame(tk.Frame):
     def __init__(self, parent, radius=12, border_width=1, border_color=WIDGET_BORDER_COLOR, fill_color=WIDGET_BG, **kwargs):
         super().__init__(parent, bg=parent.cget("bg"), **kwargs)
@@ -66,7 +64,6 @@ class RoundedFrame(tk.Frame):
         self.fill_color = new_color
         self._draw_border()
 
-# --- MODIFICA #1: NUOVA LOGICA PER SPLASH SCREEN NON BLOCCANTE E COMPATIBILE CON LINUX ---
 def create_splash_screen(parent):
     splash_win = tk.Toplevel(parent)
     splash_win.overrideredirect(True)
@@ -76,21 +73,13 @@ def create_splash_screen(parent):
     x, y = (screen_width / 2) - (splash_width / 2), (screen_height / 2) - (splash_height / 2)
     splash_win.geometry(f'{splash_width}x{splash_height}+{int(x)}+{int(y)}')
 
-    # --- INIZIO DELLA MODIFICA PER LA COMPATIBILITÀ ---
-    # Controlla il sistema operativo per applicare l'effetto di trasparenza corretto
     if sys.platform == "win32":
-        # Metodo per Windows per creare una finestra sagomata (non rettangolare)
         TRANSPARENT_COLOR = '#abcdef' 
         splash_win.config(bg=TRANSPARENT_COLOR)
         splash_win.attributes('-transparentcolor', TRANSPARENT_COLOR)
     else:
-        # Metodo per Linux e altri OS che usa -alpha come richiesto.
-        # Questo crea una finestra rettangolare semi-trasparente.
-        # Impostiamo il colore di sfondo della finestra uguale a quello del frame
-        # per evitare che gli angoli appaiano di un colore indesiderato.
         splash_win.config(bg=SIDEBAR_BG)
-        splash_win.attributes('-alpha', 0.95) # Valore da 0.0 (trasparente) a 1.0 (opaco)
-    # --- FINE DELLA MODIFICA ---
+        splash_win.attributes('-alpha', 0.95) 
 
     splash_frame = RoundedFrame(splash_win, radius=25, fill_color=SIDEBAR_BG, border_width=0)
     splash_frame.pack(fill='both', expand=True)
@@ -106,10 +95,7 @@ def create_splash_screen(parent):
         print("logo.png non trovato per lo splash screen.")
     
     return splash_win
-# --- FINE MODIFICA #1 ---
 
-
-# Config file
 CONFIG_FILE = 'config.json'
 if os.path.exists(CONFIG_FILE):
     with open(CONFIG_FILE, 'r') as f: config = json.load(f)
@@ -123,7 +109,6 @@ else:
 all_tabs = ['Holehe', 'PhoneLookup', 'BreachDirectory', 'Sherlock', 'Truecaller']
 visible_tabs = config.get('visible_tabs', all_tabs)
 
-# Funzioni Helper e Worker (invariate)
 def run_command(worker_func, *args):
     threading.Thread(target=worker_func, args=args, daemon=True).start()
 def update_results(widget, text):
@@ -219,9 +204,7 @@ def open_settings():
         root.destroy(); os.execv(sys.executable, ['python'] + sys.argv)
     tk.Button(set_win, text='Save & Restart', command=save_settings, bg=TAB_SELECTED_BG, fg=TEXT_COLOR, relief='flat', font=FONT_NORMAL, padx=10, pady=5).pack(pady=20)
 
-# --- MODIFICA #2: RIORGANIZZAZIONE DELLO SCRIPT PRINCIPALE ---
 def setup_main_app(root, splash_win):
-    # Questa funzione ora contiene TUTTO il codice di costruzione della UI principale
     root.title('Lumen | OsintSuite')
     try:
         root.iconbitmap('logo.png')
@@ -292,18 +275,13 @@ def setup_main_app(root, splash_win):
 
     if current_tab: select_tab(current_tab)
 
-    # Quando tutto è caricato, distruggi la splash e mostra la finestra principale
     splash_win.destroy()
     root.deiconify()
 
 if __name__ == "__main__":
     root = tk.Tk()
-    root.withdraw() # Tieni la finestra principale nascosta all'inizio
-
+    root.withdraw() 
     splash = create_splash_screen(root)
-    
-    # Avvia il caricamento dell'app principale DOPO che la splash è apparsa
-    # Il valore 100 (ms) dà a Tkinter il tempo di renderizzare la splash screen
     root.after(100, setup_main_app, root, splash)
-    
     root.mainloop()
+
