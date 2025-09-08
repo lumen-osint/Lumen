@@ -21,7 +21,14 @@
 - Sherlock  
 
 ###
+## Dove comprare le API?
 
+- BreachDirectory 
+https://rapidapi.com/rohan-patra/api/breachdirectory
+
+- Truecaller 
+https://rapidapi.com/do3t/api/truecaller-data2
+### 
 ## Installazione e avvio
 
 ```bash
