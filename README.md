@@ -11,7 +11,7 @@
 </div>
 
 ###
-![UI Screenshot](assets/ui.png)
+![UI Screenshot](ui.png)
 ## Funzionalità
 
 - Holehe  
