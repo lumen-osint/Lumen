@@ -17,3 +17,19 @@
 </div>
 
 ###
+
+## Funzionalità
+
+- Holehe  
+- PhoneLookup  
+- BreachDirectory (API)  
+- Truecaller (API)  
+- Sherlock  
+
+###
+
+## Installazione e avvio
+
+```bash
+pip install -r requirements.txt
+python lumen.py
